@@ -1,0 +1,93 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.wrapper {
+  background-color: black;
+  width: 232px;
+  height: 370px;
+  padding: .5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input {
+  background-color: black;
+  height: 60px;
+  width: 100%;
+  color: white;
+  font-size: 40px;
+  margin-bottom: 10px;
+  border: 0px;
+  text-align: right;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+input:focus{
+  border: none;
+  outline:none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  row-gap: 6px;
+}
+
+.button {
+  padding: 5px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  border: 0px;
+  justify-self: center;
+  align-self: center;
+  color: white;
+  background-color: rgb(56, 56, 56);
+  font-size: 20px;
+}
+
+.light {
+  background-color: rgb(128, 126, 126);
+  color: black;
+}
+
+.long {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 5;
+  grid-row-end: 6;
+  width: 115px;
+  border-radius: 35px 35px 35px 35px;
+  text-align: left;
+  padding-left: 20px;
+}
+
+.orange {
+  background-color: rgb(207, 138, 33);
+}
+
+.deco {
+  background-color: white;
+  width: 30%;
+  height: 2px;
+  border-radius: 1px;
+  margin-top: 30px;
+}
