@@ -3,8 +3,6 @@ const inputValue = document.getElementById("inputNumber");
 const formInputs = document.querySelectorAll(".button");
 
 const setNumbersForCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
-  console.log("in Function");
-  
   if (calculatorRecieved.operation) {
     if (calculatorRecieved.secondValue === undefined) {
       calculatorRecieved.secondValue = Number(valueFromButtonRecieved);
@@ -25,11 +23,120 @@ const setNumbersForCalculation = (calculatorRecieved, valueFromButtonRecieved) =
   return calculatorRecieved;
 }
 
+const clearAll = (calculatorRecieved) => {
+  calculatorRecieved.firstValue = undefined;
+  calculatorRecieved.secondValue = undefined;
+  calculatorRecieved.operation = '';
+  calculatorRecieved.previousOperation = '';
+  inputValue.value = 0;
+  return calculatorRecieved;
+}
+
+const calculateValue = (firstValueRecieved, secondValueRecieved, operationRecieved) => {
+  //console.log("in calculateValue Function" + operationRecieved + " " + firstValueRecieved + " " + secondValueRecieved);
+  switch (operationRecieved) {
+    case '+':
+      firstValueRecieved += secondValueRecieved;
+      break;
+    case '-':
+      firstValueRecieved -= secondValueRecieved;
+      break;
+    case 'x':
+      firstValueRecieved *= secondValueRecieved;
+      break;
+    case '/':
+      if (secondValueRecieved === 0) firstValueRecieved = 0;
+      else firstValueRecieved /= secondValueRecieved;
+      break;
+    case '%':
+      firstValueRecieved = firstValueRecieved / 100;
+      break;
+  }
+  return firstValueRecieved;
+}
+
+const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
+  /*console.log("Start of doCalculation");
+  console.log("1st " + calculatorRecieved.firstValue);
+  console.log("2st " + calculatorRecieved.secondValue);
+  console.log("OP " + calculatorRecieved.operation);
+  console.log("Prevoius OP " + calculatorRecieved.previousOperation);
+  console.log("ValueFromButton " + valueFromButtonRecieved);*/
+
+  if (!calculatorRecieved.firstValue) {
+    calculatorRecieved.firstValue = 0;
+  }
+
+  if (valueFromButtonRecieved === "%") {
+    calculatorRecieved.operation = '%';
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
+    inputValue.value = calculatorRecieved.firstValue;
+  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved !== "=") {
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+    calculatorRecieved.secondValue = undefined;
+    inputValue.value = calculatorRecieved.firstValue;
+  } else if (!calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && !calculatorRecieved.operation) {
+    calculatorRecieved.firstValue = undefined;
+    calculatorRecieved.operation = '';
+  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation !== "=") {
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+    inputValue.value = calculatorRecieved.firstValue;
+  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation === "=") {
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.previousOperation);
+    inputValue.value = calculatorRecieved.firstValue;
+  } else if (!calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation !== "=") {
+    calculatorRecieved.secondValue = Number(inputValue.value);
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+    inputValue.value = calculatorRecieved.firstValue;
+  }
+
+  switch (valueFromButtonRecieved) {
+    case '+':
+      calculatorRecieved.operation = "+";
+      calculatorRecieved.previousOperation = '';
+      break;
+    case '-':
+      calculatorRecieved.operation = "-";
+      calculatorRecieved.previousOperation = '';
+      break;
+    case 'x':
+      calculatorRecieved.operation = "x";
+      calculatorRecieved.previousOperation = '';
+      break;
+    case '/':
+      calculatorRecieved.operation = "/";
+      calculatorRecieved.previousOperation = '';
+      break;
+    case '%':
+      calculatorRecieved.operation = "%";
+      calculatorRecieved.previousOperation = '';
+      break;
+    case '=':
+      if (calculatorRecieved.operation && calculatorRecieved.operation !== '=') {
+        calculatorRecieved.previousOperation = calculatorRecieved.operation;
+        calculatorRecieved.operation = "=";
+      }
+      break;
+    default: console.log("Undefined operation");
+  }
+  /* console.log("Result:");
+  console.log("1st " + calculatorRecieved.firstValue);
+  console.log("2st " + calculatorRecieved.secondValue);
+  console.log("OP " + calculatorRecieved.operation);
+  console.log("Previous OP " + calculatorRecieved.previousOperation);
+  console.log("ValueFromButton " + valueFromButtonRecieved);
+  console.log("End of doCalculation");
+  console.log("_________________________________________");*/
+
+  return calculatorRecieved;
+}
+
 class Calculator {
-  constructor(firstValue = undefined, secondValue = undefined, operation = '') {
+  constructor(firstValue = undefined, secondValue = undefined, operation = '', previousOperation = '') {
     this.firstValue = firstValue;
     this.secondValue = secondValue;
     this.operation = operation;
+    this.previousOperation = previousOperation;
   }
 
   doOperation(calculatorInput, valueFromButton) {
@@ -44,66 +151,20 @@ class Calculator {
       case '7':
       case '8':
       case '9':
-        // works  
-        /*
-        if (calculatorInput.operation) {
-          if (calculatorInput.secondValue === undefined) {
-            calculatorInput.secondValue = Number(valueFromButton);
-          } else {
-            const newValueSecond = calculatorInput.secondValue + valueFromButton;
-            calculatorInput.secondValue = Number(newValueSecond);
-          }
-          inputValue.value = calculatorInput.secondValue;
-        } else {
-          if (calculatorInput.firstValue === undefined) {
-            calculatorInput.firstValue = Number(valueFromButton);
-          } else {
-            const newValueFirst = calculatorInput.firstValue + valueFromButton;
-            calculatorInput.firstValue = Number(newValueFirst);
-          }
-          inputValue.value = calculatorInput.firstValue;
-        }*/
         calculatorInput = setNumbersForCalculation(calculatorInput, valueFromButton);
-        console.log(calculatorInput.firstValue);
         break;
       case 'C':
-        console.log("I am by start of C, firstValue = " + calculator.firstValue);
-        calculatorInput.firstValue = undefined;
-        calculatorInput.secondValue = undefined;
-        calculatorInput.operation = '';
-        inputValue.value = 0;
-        console.log("I am by end of C, firstValue = " + calculator.firstValue);
+        calculatorInput = clearAll(calculatorInput);
         break;
       case '+':
-        console.log("in operation");
-        if (calculatorInput.secondValue) {
-          calculatorInput.firstValue += calculatorInput.secondValue;
-          calculatorInput.secondValue = undefined;
-        }
-        calculatorInput.operation = "+";
+      case '-':
+      case '/':
+      case 'x':
+      case '%':
+      case '=':
+        calculatorInput = doCalculation(calculatorInput, valueFromButton);
         break;
-      /*
-      console.log("I am by start of +, firstValue = " + calculator.firstValue);
-      if (calculatorInput.operation) {
-        calculatorInput.secondValue = Number(inputValue.value);
-        inputValue.value = Number(calculatorInput.firstValue) + Number(calculatorInput.secondValue);
-      } else {
-        calculatorInput.operation = "+";
-        calculatorInput.firstValue = Number(inputValue.value);
-      }
-    
-      //console.log('Hi' + calculator.firstValue);
-      console.log("I am by end of +, firstValue = " + calculator.firstValue);
-      break;
-    case '=':
-      console.log("I am by start of =, firstValue = " + calculator.firstValue);
-      calculatorInput.firstValue += Number(inputValue.value);
-      inputValue.value = calculatorInput.firstValue;
-      calculatorInput.firstValue = 0;
-      calculatorInput.operation = '';
-      console.log("I am by end of =, firstValue = " + calculator.firstValue);
-      break;*/
-      default: console.log("No");
+      default: console.log("Unexpected function selected");
     }
   }
 }
@@ -114,7 +175,6 @@ const calculator = new Calculator();
 formInputs.forEach((formInput) => {
   formInput.addEventListener("click", event => {
     //const inputValue = event.target.value;
-    //console.log(inputValue);
     calculator.doOperation(calculator, formInput.innerHTML);
   })
 });
