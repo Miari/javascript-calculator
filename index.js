@@ -51,24 +51,32 @@ const calculateValue = (firstValueRecieved, secondValueRecieved, operationReciev
     case '%':
       firstValueRecieved = firstValueRecieved / 100;
       break;
+    case '+/-':
+      console.log("here");
+      firstValueRecieved = 0 - firstValueRecieved;
+      break;
   }
   return firstValueRecieved;
 }
 
 const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
-  /*console.log("Start of doCalculation");
+  console.log("Start of doCalculation");
   console.log("1st " + calculatorRecieved.firstValue);
   console.log("2st " + calculatorRecieved.secondValue);
   console.log("OP " + calculatorRecieved.operation);
   console.log("Prevoius OP " + calculatorRecieved.previousOperation);
-  console.log("ValueFromButton " + valueFromButtonRecieved);*/
-
+  console.log("ValueFromButton " + valueFromButtonRecieved);
   if (!calculatorRecieved.firstValue) {
     calculatorRecieved.firstValue = 0;
   }
 
   if (valueFromButtonRecieved === "%") {
     calculatorRecieved.operation = '%';
+    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
+    inputValue.value = calculatorRecieved.firstValue;
+  } else if (valueFromButtonRecieved === "+/-") {
+    calculatorRecieved.operation = '+/-';
+    console.log("here1 " + calculatorRecieved.firstValue);
     calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
     inputValue.value = calculatorRecieved.firstValue;
   } else if (calculatorRecieved.secondValue && valueFromButtonRecieved !== "=") {
@@ -119,14 +127,14 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
       break;
     default: console.log("Undefined operation");
   }
-  /* console.log("Result:");
+ console.log("Result:");
   console.log("1st " + calculatorRecieved.firstValue);
   console.log("2st " + calculatorRecieved.secondValue);
   console.log("OP " + calculatorRecieved.operation);
   console.log("Previous OP " + calculatorRecieved.previousOperation);
   console.log("ValueFromButton " + valueFromButtonRecieved);
   console.log("End of doCalculation");
-  console.log("_________________________________________");*/
+  console.log("_________________________________________");
 
   return calculatorRecieved;
 }
@@ -162,6 +170,7 @@ class Calculator {
       case 'x':
       case '%':
       case '=':
+      case '+/-':
         calculatorInput = doCalculation(calculatorInput, valueFromButton);
         break;
       default: console.log("Unexpected function selected");
