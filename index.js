@@ -60,12 +60,12 @@ const calculateValue = (firstValueRecieved, secondValueRecieved, operationReciev
 }
 
 const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
-  console.log("Start of doCalculation");
+  /*console.log("Start of doCalculation");
   console.log("1st " + calculatorRecieved.firstValue);
   console.log("2st " + calculatorRecieved.secondValue);
   console.log("OP " + calculatorRecieved.operation);
   console.log("Prevoius OP " + calculatorRecieved.previousOperation);
-  console.log("ValueFromButton " + valueFromButtonRecieved);
+  console.log("ValueFromButton " + valueFromButtonRecieved);*/
   if (!calculatorRecieved.firstValue) {
     calculatorRecieved.firstValue = 0;
   }
@@ -127,17 +127,18 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
       break;
     default: console.log("Undefined operation");
   }
- console.log("Result:");
-  console.log("1st " + calculatorRecieved.firstValue);
-  console.log("2st " + calculatorRecieved.secondValue);
-  console.log("OP " + calculatorRecieved.operation);
-  console.log("Previous OP " + calculatorRecieved.previousOperation);
-  console.log("ValueFromButton " + valueFromButtonRecieved);
-  console.log("End of doCalculation");
-  console.log("_________________________________________");
+  /*console.log("Result:");
+   console.log("1st " + calculatorRecieved.firstValue);
+   console.log("2st " + calculatorRecieved.secondValue);
+   console.log("OP " + calculatorRecieved.operation);
+   console.log("Previous OP " + calculatorRecieved.previousOperation);
+   console.log("ValueFromButton " + valueFromButtonRecieved);
+   console.log("End of doCalculation");
+   console.log("_________________________________________");*/
 
   return calculatorRecieved;
 }
+
 
 class Calculator {
   constructor(firstValue = undefined, secondValue = undefined, operation = '', previousOperation = '') {
@@ -159,10 +160,10 @@ class Calculator {
       case '7':
       case '8':
       case '9':
-        calculatorInput = setNumbersForCalculation(calculatorInput, valueFromButton);
+        setNumbersForCalculation(calculatorInput, valueFromButton);
         break;
       case 'C':
-        calculatorInput = clearAll(calculatorInput);
+        clearAll(calculatorInput);
         break;
       case '+':
       case '-':
@@ -171,7 +172,7 @@ class Calculator {
       case '%':
       case '=':
       case '+/-':
-        calculatorInput = doCalculation(calculatorInput, valueFromButton);
+        doCalculation(calculatorInput, valueFromButton);
         break;
       default: console.log("Unexpected function selected");
     }
