@@ -98,35 +98,16 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
     inputValue.value = calculatorRecieved.firstValue;
   }
 
-  switch (valueFromButtonRecieved) {
-    case '+':
-      calculatorRecieved.operation = "+";
+  const simpleCalculations = ['+', '-', 'x', '/', '%']
+  if (simpleCalculations.includes(valueFromButtonRecieved)) {
+    calculatorRecieved.operation = valueFromButtonRecieved;
       calculatorRecieved.previousOperation = '';
-      break;
-    case '-':
-      calculatorRecieved.operation = "-";
-      calculatorRecieved.previousOperation = '';
-      break;
-    case 'x':
-      calculatorRecieved.operation = "x";
-      calculatorRecieved.previousOperation = '';
-      break;
-    case '/':
-      calculatorRecieved.operation = "/";
-      calculatorRecieved.previousOperation = '';
-      break;
-    case '%':
-      calculatorRecieved.operation = "%";
-      calculatorRecieved.previousOperation = '';
-      break;
-    case '=':
-      if (calculatorRecieved.operation && calculatorRecieved.operation !== '=') {
-        calculatorRecieved.previousOperation = calculatorRecieved.operation;
-        calculatorRecieved.operation = "=";
-      }
-      break;
-    default: console.log("Undefined operation");
+  } else if (calculatorRecieved.operation && calculatorRecieved.operation !== '=') {
+    calculatorRecieved.previousOperation = calculatorRecieved.operation;
+    calculatorRecieved.operation = "=";
   }
+
+  
   /*console.log("Result:");
    console.log("1st " + calculatorRecieved.firstValue);
    console.log("2st " + calculatorRecieved.secondValue);
