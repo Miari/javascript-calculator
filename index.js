@@ -66,6 +66,9 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
   console.log("OP " + calculatorRecieved.operation);
   console.log("Prevoius OP " + calculatorRecieved.previousOperation);
   console.log("ValueFromButton " + valueFromButtonRecieved);*/
+
+  const simpleCalculations = ['+', '-', 'x', '/', '%']
+
   if (!calculatorRecieved.firstValue) {
     calculatorRecieved.firstValue = 0;
   }
@@ -79,35 +82,48 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
     console.log("here1 " + calculatorRecieved.firstValue);
     calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
     inputValue.value = calculatorRecieved.firstValue;
-  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved !== "=") { // result after operation, second value get cleared
-    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
-    calculatorRecieved.secondValue = undefined;
-    inputValue.value = calculatorRecieved.firstValue;
-  } else if (!calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && !calculatorRecieved.operation) {
-    calculatorRecieved.firstValue = undefined;
-    calculatorRecieved.operation = '';
-  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation !== "=") {
-    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
-    inputValue.value = calculatorRecieved.firstValue;
-  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation === "=") {
-    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.previousOperation);
-    inputValue.value = calculatorRecieved.firstValue;
-  } else if (!calculatorRecieved.secondValue && valueFromButtonRecieved === "=" && calculatorRecieved.operation !== "=") {
-    calculatorRecieved.secondValue = Number(inputValue.value);
-    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
-    inputValue.value = calculatorRecieved.firstValue;
   }
 
-  const simpleCalculations = ['+', '-', 'x', '/', '%']
-  if (simpleCalculations.includes(valueFromButtonRecieved)) {
+  if (valueFromButtonRecieved === "=") {
+    if (calculatorRecieved.secondValue && calculatorRecieved.operation) {
+      if (calculatorRecieved.operation === "=") {
+        calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.previousOperation);
+        inputValue.value = calculatorRecieved.firstValue;
+      } else {
+        calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+        inputValue.value = calculatorRecieved.firstValue;
+        calculatorRecieved.previousOperation = calculatorRecieved.operation;
+        calculatorRecieved.operation = "=";
+      }
+    } else {
+      if (!calculatorRecieved.operation) {
+        calculatorRecieved.firstValue = undefined;
+        calculatorRecieved.operation = '';
+      } else if (calculatorRecieved.operation !== "=") {
+        calculatorRecieved.secondValue = Number(inputValue.value);
+        calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+        inputValue.value = calculatorRecieved.firstValue;
+      }
+    }
+  } else if (simpleCalculations.includes(valueFromButtonRecieved)) {  // operation + result, second value cleared
+    if (calculatorRecieved.secondValue) {
+      calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
+      calculatorRecieved.secondValue = undefined;
+      inputValue.value = calculatorRecieved.firstValue;
+    }
     calculatorRecieved.operation = valueFromButtonRecieved;
-      calculatorRecieved.previousOperation = '';
+    calculatorRecieved.previousOperation = '';
+  }
+
+
+  /*if (simpleCalculations.includes(valueFromButtonRecieved)) {
+
   } else if (calculatorRecieved.operation && calculatorRecieved.operation !== '=') {
     calculatorRecieved.previousOperation = calculatorRecieved.operation;
     calculatorRecieved.operation = "=";
-  }
+  }*/
 
-  
+
   /*console.log("Result:");
    console.log("1st " + calculatorRecieved.firstValue);
    console.log("2st " + calculatorRecieved.secondValue);
