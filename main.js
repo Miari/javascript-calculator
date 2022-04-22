@@ -1,29 +1,23 @@
+let valueToDisplay = "";
+
 //form elements
 const inputValue = document.getElementById("inputNumber");
 const formInputs = document.querySelectorAll(".button");
 
+/** A function pick-ups value from number button, form whole number, store it in appropriate 
+* fields of calculator object and shows the number in input 
+*/
 const setNumbersForCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
-  if (calculatorRecieved.operation) {
-    if (calculatorRecieved.secondValue === undefined) {
-      calculatorRecieved.secondValue = Number(valueFromButtonRecieved);
-    } else {
-      const newValueSecond = calculatorRecieved.secondValue + valueFromButtonRecieved;
-      calculatorRecieved.secondValue = Number(newValueSecond);
-    }
-    inputValue.value = calculatorRecieved.secondValue;
-  } else {
-    if (calculatorRecieved.firstValue === undefined) {
-      calculatorRecieved.firstValue = Number(valueFromButtonRecieved);
-    } else {
-      const newValueFirst = calculatorRecieved.firstValue + valueFromButtonRecieved;
-      calculatorRecieved.firstValue = Number(newValueFirst);
-    }
-    inputValue.value = calculatorRecieved.firstValue;
-  }
+  valueToDisplay = valueToDisplay + valueFromButtonRecieved;
+  inputValue.value = parseFloat(valueToDisplay);
+  calculatorRecieved.operation ? calculatorRecieved.secondValue = parseFloat(valueToDisplay) : calculatorRecieved.firstValue = parseFloat(valueToDisplay);
   return calculatorRecieved;
 }
 
+/** A function clears all values of received calculator object and valueToDisplay variable
+*/
 const clearAll = (calculatorRecieved) => {
+  valueToDisplay = '';
   calculatorRecieved.firstValue = undefined;
   calculatorRecieved.secondValue = undefined;
   calculatorRecieved.operation = '';
@@ -32,6 +26,8 @@ const clearAll = (calculatorRecieved) => {
   return calculatorRecieved;
 }
 
+/** A function perform simple mathematic operations
+*/
 const calculateValue = (firstValueRecieved, secondValueRecieved, operationRecieved) => {
   //console.log("in calculateValue Function" + operationRecieved + " " + firstValueRecieved + " " + secondValueRecieved);
   switch (operationRecieved) {
@@ -51,23 +47,24 @@ const calculateValue = (firstValueRecieved, secondValueRecieved, operationReciev
     case '%':
       firstValueRecieved = firstValueRecieved / 100;
       break;
-    case '+/-':
-      console.log("here");
-      firstValueRecieved = 0 - firstValueRecieved;
-      break;
   }
+  //console.log("post calculateValue Function" + operationRecieved + " " + firstValueRecieved + " " + secondValueRecieved);
+  //console.log("_______________________________");
   return firstValueRecieved;
 }
 
+/** A function perform all the logic for any functional number pressed, except of number buttons
+*/
 const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
-  /*console.log("Start of doCalculation");
+  valueToDisplay = '';
+  console.log("Start of doCalculation");
   console.log("1st " + calculatorRecieved.firstValue);
   console.log("2st " + calculatorRecieved.secondValue);
   console.log("OP " + calculatorRecieved.operation);
   console.log("Prevoius OP " + calculatorRecieved.previousOperation);
-  console.log("ValueFromButton " + valueFromButtonRecieved);*/
+  console.log("ValueFromButton " + valueFromButtonRecieved);
 
-  const simpleCalculations = ['+', '-', 'x', '/', '%']
+  const simpleCalculations = ['+', '-', 'x', '/']
 
   if (!calculatorRecieved.firstValue) {
     calculatorRecieved.firstValue = 0;
@@ -77,12 +74,7 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
     calculatorRecieved.operation = '%';
     calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
     inputValue.value = calculatorRecieved.firstValue;
-  } else if (valueFromButtonRecieved === "+/-") {
-    calculatorRecieved.operation = '+/-';
-    console.log("here1 " + calculatorRecieved.firstValue);
-    calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
-    inputValue.value = calculatorRecieved.firstValue;
-  }
+  } 
 
   if (valueFromButtonRecieved === "=") {
     if (calculatorRecieved.secondValue && calculatorRecieved.operation) {
@@ -92,7 +84,7 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
       } else {
         calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
         inputValue.value = calculatorRecieved.firstValue;
-        calculatorRecieved.previousOperation = calculatorRecieved.operation;
+        if (calculatorRecieved.operation !== '+/-') calculatorRecieved.previousOperation = calculatorRecieved.operation;
         calculatorRecieved.operation = "=";
       }
     } else {
@@ -113,25 +105,19 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
     }
     calculatorRecieved.operation = valueFromButtonRecieved;
     calculatorRecieved.previousOperation = '';
+  } else if (valueFromButtonRecieved === '+/-') {
+    calculatorRecieved.firstValue = 0 - calculatorRecieved.firstValue;
+    inputValue.value = calculatorRecieved.firstValue;
   }
 
-
-  /*if (simpleCalculations.includes(valueFromButtonRecieved)) {
-
-  } else if (calculatorRecieved.operation && calculatorRecieved.operation !== '=') {
-    calculatorRecieved.previousOperation = calculatorRecieved.operation;
-    calculatorRecieved.operation = "=";
-  }*/
-
-
-  /*console.log("Result:");
-   console.log("1st " + calculatorRecieved.firstValue);
-   console.log("2st " + calculatorRecieved.secondValue);
-   console.log("OP " + calculatorRecieved.operation);
-   console.log("Previous OP " + calculatorRecieved.previousOperation);
-   console.log("ValueFromButton " + valueFromButtonRecieved);
-   console.log("End of doCalculation");
-   console.log("_________________________________________");*/
+  console.log("Result:");
+  console.log("1st " + calculatorRecieved.firstValue);
+  console.log("2st " + calculatorRecieved.secondValue);
+  console.log("OP " + calculatorRecieved.operation);
+  console.log("Previous OP " + calculatorRecieved.previousOperation);
+  console.log("ValueFromButton " + valueFromButtonRecieved);
+  console.log("End of doCalculation");
+  console.log("_________________________________________");
 
   return calculatorRecieved;
 }
@@ -157,6 +143,7 @@ class Calculator {
       case '7':
       case '8':
       case '9':
+      case '.':
         setNumbersForCalculation(this, valueFromButton);
         break;
       case 'C':
@@ -175,14 +162,11 @@ class Calculator {
     }
   }
 }
-
 const calculator = new Calculator();
 
 //listeners for buttons
 formInputs.forEach((formInput) => {
   formInput.addEventListener("click", event => {
-    //const inputValue = event.target.value;
     calculator.doOperation(formInput.innerHTML);
   })
 });
-
