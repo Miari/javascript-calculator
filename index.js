@@ -79,7 +79,7 @@ const doCalculation = (calculatorRecieved, valueFromButtonRecieved) => {
     console.log("here1 " + calculatorRecieved.firstValue);
     calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, 0, calculatorRecieved.operation);
     inputValue.value = calculatorRecieved.firstValue;
-  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved !== "=") {
+  } else if (calculatorRecieved.secondValue && valueFromButtonRecieved !== "=") { // result after operation, second value get cleared
     calculatorRecieved.firstValue = calculateValue(calculatorRecieved.firstValue, calculatorRecieved.secondValue, calculatorRecieved.operation);
     calculatorRecieved.secondValue = undefined;
     inputValue.value = calculatorRecieved.firstValue;
@@ -148,7 +148,7 @@ class Calculator {
     this.previousOperation = previousOperation;
   }
 
-  doOperation(calculatorInput, valueFromButton) {
+  doOperation(valueFromButton) {
     switch (valueFromButton) {
       case '0':
       case '1':
@@ -160,10 +160,10 @@ class Calculator {
       case '7':
       case '8':
       case '9':
-        setNumbersForCalculation(calculatorInput, valueFromButton);
+        setNumbersForCalculation(this, valueFromButton);
         break;
       case 'C':
-        clearAll(calculatorInput);
+        clearAll(this);
         break;
       case '+':
       case '-':
@@ -172,7 +172,7 @@ class Calculator {
       case '%':
       case '=':
       case '+/-':
-        doCalculation(calculatorInput, valueFromButton);
+        doCalculation(this, valueFromButton);
         break;
       default: console.log("Unexpected function selected");
     }
@@ -185,7 +185,7 @@ const calculator = new Calculator();
 formInputs.forEach((formInput) => {
   formInput.addEventListener("click", event => {
     //const inputValue = event.target.value;
-    calculator.doOperation(calculator, formInput.innerHTML);
+    calculator.doOperation(formInput.innerHTML);
   })
 });
 
